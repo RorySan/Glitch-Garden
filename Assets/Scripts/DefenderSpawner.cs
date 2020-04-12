@@ -3,23 +3,34 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DefenderSpawner : MonoBehaviour
-{
-
-    [SerializeField] GameObject spawnArea;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+{ 
+    Defender defender;
+ 
 
     private void OnMouseDown()
+    {       
+        SpawnDefender(SnapToGrid(GetSquaredClicked()));        
+    }
+
+    public void SetSelectedDefender (Defender defenderToSelect)
     {
-        Debug.Log("mouse clicked at:" );
+        defender = defenderToSelect;
+    }
+
+    private Vector2 SnapToGrid(Vector2 position)
+    {
+        return new Vector2(Mathf.Round(position.x), Mathf.Round(position.y));
+    }
+
+    private Vector2 GetSquaredClicked()
+    {
+        Vector2 clickPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
+        Vector2 worldPos = Camera.main.ScreenToWorldPoint(clickPos);
+        return worldPos; 
+    }
+
+    private void SpawnDefender(Vector2 position)
+    {
+        Defender newDefender = Instantiate(defender, position, Quaternion.identity) as Defender;
     }
 }
