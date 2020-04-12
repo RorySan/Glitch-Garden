@@ -7,6 +7,10 @@ public class Attacker : MonoBehaviour
 
     [Range(0f, 3f)]
     float currentSpeed = 0f;
+    [SerializeField] int health = 2;
+
+    [SerializeField] AudioClip deathSound;
+    [SerializeField] GameObject explosionVFXPrefab;
 
 
 
@@ -20,4 +24,18 @@ public class Attacker : MonoBehaviour
     {
         currentSpeed = speed;
     }
+
+    public void TakeDamage(int damage)
+    {
+        health = health - damage;
+        if (health <= 0)
+        {
+            var explosion = Instantiate(explosionVFXPrefab, transform.position, Quaternion.identity);
+            Destroy(explosion, 1f);
+            Destroy(gameObject);
+        }
+    }
+
+   
+
 }
