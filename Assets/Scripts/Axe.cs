@@ -6,7 +6,7 @@ public class Axe : MonoBehaviour
 {
 
     [Range(1, 7)][SerializeField] float projectileSpeed = 5f;
-    [SerializeField] int damage = 2;
+    [SerializeField] int damage = 1;
 
     // Start is called before the first frame update
     void Start()
