@@ -6,36 +6,69 @@ public class Attacker : MonoBehaviour
 {
 
     [Range(0f, 3f)]
-    float currentSpeed = 0f;
-    [SerializeField] int health = 2;
+    float currentSpeed = 0f;    
+    GameObject currentTarget;
+    Animator animator;
 
     [SerializeField] AudioClip deathSound;
-    [SerializeField] GameObject explosionVFXPrefab;
 
 
+    private void Awake()
+    {
+        FindObjectOfType<LevelController>().attackerSpawned();
+    }
+
+    private void OnDestroy()
+    {
+        FindObjectOfType<LevelController>().attackerKilled();
+    }
+
+    private void Start()
+    {
+        animator = GetComponent<Animator>();
+    }
 
     // Update is called once per frame
     void Update()
     {
         transform.Translate(Vector2.left * currentSpeed * Time.deltaTime);
+        UpdateAnimationState();
+    }
+
+    private void UpdateAnimationState()
+    {
+        if(!currentTarget)
+        {
+            GetComponent<Animator>().SetBool("isAttacking", false);
+        }
     }
 
     public void SetMovementSpeed(float speed)
     {
         currentSpeed = speed;
-    }
+    }    
 
-    public void TakeDamage(int damage)
+    public void Attack(GameObject target)
     {
-        health = health - damage;
-        if (health <= 0)
+        animator.SetBool("isAttacking", true);
+        currentTarget = target;
+    }
+   
+    public void StrikeCurrentTarget(float damage)
+    {
+        if (!currentTarget) 
         {
-            var explosion = Instantiate(explosionVFXPrefab, transform.position, Quaternion.identity);
-            Destroy(explosion, 1f);
-            Destroy(gameObject);
+           return;
         }
+
+        Health health = currentTarget.GetComponent<Health>();
+        if (health)
+        {
+            health.DealDamage(damage);     
+              
+        }
+        
     }
 
-   
 
 }

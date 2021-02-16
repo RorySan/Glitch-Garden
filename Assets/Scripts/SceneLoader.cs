@@ -20,7 +20,7 @@ public class SceneLoader : MonoBehaviour
     IEnumerator WaitForTime()
     {
         yield return new WaitForSeconds(timeToWait);
-        LoadNextScene();
+        LoadMainMenu();
     }
 
     public void LoadNextScene()
@@ -29,11 +29,32 @@ public class SceneLoader : MonoBehaviour
         SceneManager.LoadScene(currentSceneIndex + 1);
     }
 
-    public void LoadStartScene()
+    public void LoadOptionsScene()
     {
-        SceneManager.LoadScene(0);
+        SceneManager.LoadScene("Options Scene");
     }
 
+    public void LoadStartScene()
+    {
+        SceneManager.LoadScene(1);
+    }
+
+    public void RestartScene()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene(currentSceneIndex);
+    }
+
+    public void LoadMainMenu()
+    {
+        Time.timeScale = 1;
+        SceneManager.LoadScene("Start Screen");
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
 
 
 }

@@ -4,16 +4,18 @@ using UnityEngine;
 
 public class AttackerSpawner : MonoBehaviour
 {
-    bool spawn = true;
+    [SerializeField] bool spawn = true;
 
+    LevelController levelController;
     [SerializeField] float minSpawnDelay = 1f;
-    [SerializeField] float maxSpawnDelay = 5f;
+    [SerializeField] float maxSpawnDelay = 3f;
 
-    [SerializeField] Attacker attackerPrefab;
+    [SerializeField] Attacker[] attackerList;
 
     // Start is called before the first frame update
     IEnumerator Start()
     {
+        levelController = FindObjectOfType<LevelController>();
         while (spawn)
         {
             yield return new WaitForSeconds(Random.Range(minSpawnDelay, maxSpawnDelay));
@@ -27,9 +29,26 @@ public class AttackerSpawner : MonoBehaviour
         
     }
 
+    public void StopSpawning()
+    {
+        spawn = false;
+    }
+
     private void SpawnAttacker()
     {
-        Instantiate(attackerPrefab, transform.position, transform.rotation);
+        int attackerIndex = Random.Range(0, attackerList.Length);
+        Attacker attacker = attackerList[attackerIndex];
+        Spawn(attacker);
+        
+        
     }
+
+    private void Spawn(Attacker myAttacker)
+    {
+        Attacker newAttacker = Instantiate(myAttacker, transform.position, transform.rotation);
+        newAttacker.transform.parent = transform;
+    }
+
+    
 
 }

@@ -7,6 +7,7 @@ TagManager:
   - Projectile
   - Axe
   - Attacker
+  - Gravestone
   layers:
   - Default
   - TransparentFX

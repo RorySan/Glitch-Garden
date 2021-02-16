@@ -6,9 +6,65 @@ public class Shooter : MonoBehaviour
 {
 
     [SerializeField] GameObject projectile, gun;
-    
-public void Fire()
+    AttackerSpawner myLaneSpawner;
+    Animator animator;
+    GameObject projectileParent;
+    const string PROJECTILE_PARENT_NAME = "Projectiles";
+
+    private void Start()
     {
-        Instantiate(projectile, gun.transform.position, Quaternion.identity);
+        SetLaneSpawner();
+        animator = GetComponent<Animator>();
+        CreateProjectileParent();
+    }
+
+    private void CreateProjectileParent()
+    {
+        projectileParent = GameObject.Find(PROJECTILE_PARENT_NAME);
+        if (!projectileParent)
+        {
+            projectileParent = new GameObject(PROJECTILE_PARENT_NAME);
+        }
+    }
+    private void Update()
+    {
+        if(IsAttackerInLane())
+        {
+            animator.SetBool("IsAttacking", true);
+        }
+        else
+        {
+            animator.SetBool("IsAttacking", false);
+        }
+    }
+    public void Fire()
+    {
+        var newProjectile = Instantiate(projectile, gun.transform.position, Quaternion.identity);
+        newProjectile.transform.parent = projectileParent.transform;
+    }
+
+    private void SetLaneSpawner()
+    {
+        AttackerSpawner[] spawners = FindObjectsOfType<AttackerSpawner>();
+        foreach(AttackerSpawner spawner in spawners)
+        {
+            bool IsCloseEnough = (Mathf.Abs(spawner.transform.position.y - transform.position.y) <= Mathf.Epsilon);
+            if (IsCloseEnough)
+            {
+                myLaneSpawner = spawner;
+            }
+        }
+    }
+    
+    private bool IsAttackerInLane()
+    {
+        if(myLaneSpawner.transform.childCount > 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
     }
 }
